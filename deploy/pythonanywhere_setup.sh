@@ -8,7 +8,7 @@ ACCOUNT="${HOME##*/}"
 DOMAIN="${PA_DOMAIN:-${ACCOUNT,,}.pythonanywhere.com}"
 WSGI_FILE="/var/www/${DOMAIN//./_}_wsgi.py"
 PYTHON_VERSION="${PYTHON_VERSION:-3.12}"
-PYTHON="/usr/bin/python${PYTHON_VERSION}"
+PYTHON="$(command -v "python${PYTHON_VERSION}" || true)"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 if [[ "$SCRIPT_DIR" != "$PROJECT_DIR/deploy" || ! -f "$WSGI_FILE" ]]; then
@@ -16,8 +16,8 @@ if [[ "$SCRIPT_DIR" != "$PROJECT_DIR/deploy" || ! -f "$WSGI_FILE" ]]; then
     echo "Expected WSGI file: $WSGI_FILE"
     exit 1
 fi
-if [[ ! -x "$PYTHON" ]]; then
-    echo "$PYTHON is unavailable. Set PYTHON_VERSION to the version shown on your Web tab."
+if [[ -z "$PYTHON" || ! -x "$PYTHON" ]]; then
+    echo "Python $PYTHON_VERSION is unavailable. Set PYTHON_VERSION to the version shown on your Web tab."
     exit 1
 fi
 
