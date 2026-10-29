@@ -4,6 +4,7 @@ import re
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 from urllib.parse import quote
 
 from flask_site import Item, create_app, db
@@ -155,6 +156,7 @@ class FlaskSiteTests(unittest.TestCase):
         for path in [
             "/static/css/bootstrap.min.css", "/static/css/test.css",
             "/static/js/bootstrap.bundle.min.js", "/static/js/site.js",
+            "/static/favicon.svg",
         ]:
             with self.subTest(path=path):
                 self.assertIn(path, page)
@@ -162,6 +164,37 @@ class FlaskSiteTests(unittest.TestCase):
                 self.assertEqual(response.status_code, 200)
                 self.assertGreater(len(response.data), 20)
                 response.close()
+
+    def test_create_feedback_and_shared_demo_notice(self):
+        response = self.client.post("/create", data={
+            "name": "A fresh idea", "csrf_token": self.token(),
+        }, follow_redirects=True)
+        self.assertIn(b"Item created. One less thing to remember.", response.data)
+        self.assertIn(b"Shared classroom demo", response.data)
+        self.assertNotIn(b"Item created.", self.client.get("/").data)
+
+    def test_search_markup_escapes_item_names(self):
+        self.add_item('A "quoted" idea')
+        page = self.client.get("/")
+        self.assertIn(b'id="item-search"', page.data)
+        self.assertIn(b'data-item-name="A &#34;quoted&#34; idea"', page.data)
+        self.assertIn(b'id="search-status"', page.data)
+
+    def test_production_cookies_are_secure(self):
+        with patch.dict("os.environ", {"FLASK_SITE_ENV": "production"}):
+            app = create_app({
+                "TESTING": True,
+                "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:",
+            })
+        try:
+            response = app.test_client().get("/create", base_url="https://example.test")
+            self.assertIn("Secure", response.headers["Set-Cookie"])
+            self.assertIn("HttpOnly", response.headers["Set-Cookie"])
+            self.assertIn("SameSite=Lax", response.headers["Set-Cookie"])
+        finally:
+            with app.app_context():
+                db.session.remove()
+                db.engine.dispose()
 
     def test_sqlite_persists_between_app_instances(self):
         with tempfile.TemporaryDirectory() as directory:

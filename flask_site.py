@@ -1,16 +1,16 @@
-"""Lecture 05/06 Flask app.
+"""Lecture 05–07 Flask app.
 
 Run: flask --app flask_site run
 Test: python -m unittest discover -s tests -v
 
-This is a local classroom demo, not an authenticated multi-user service.
+This is a shared classroom demo, not an authenticated multi-user service.
 Set a persistent SECRET_KEY environment variable before any deployment.
 """
 
 import os
 import secrets
 
-from flask import Flask, redirect, render_template, request, url_for
+from flask import Flask, flash, redirect, render_template, request, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
 
@@ -31,6 +31,7 @@ def create_app(test_config=None):
         MAX_CONTENT_LENGTH=16 * 1024,
         SESSION_COOKIE_HTTPONLY=True,
         SESSION_COOKIE_SAMESITE="Lax",
+        SESSION_COOKIE_SECURE=os.environ.get("FLASK_SITE_ENV") == "production",
     )
     if test_config:
         app.config.update(test_config)
@@ -71,6 +72,7 @@ def create_app(test_config=None):
             if error is None:
                 db.session.add(Item(name=name))
                 db.session.commit()
+                flash("Item created. One less thing to remember.")
                 return redirect(url_for("index"))
         return render_template("create.html", name=name, error=error), (
             400 if error else 200
@@ -85,6 +87,7 @@ def create_app(test_config=None):
             if error is None:
                 item.name = name
                 db.session.commit()
+                flash("Changes saved.")
                 return redirect(url_for("index"))
         return render_template(
             "update.html", item=item, name=name, error=error
@@ -95,9 +98,14 @@ def create_app(test_config=None):
         item = db.get_or_404(Item, idNum)
         db.session.delete(item)
         db.session.commit()
+        flash("Item deleted.")
         return redirect(url_for("index"))
 
     return app
 
 
 app = create_app()
+
+
+if __name__ == "__main__":
+    app.run()

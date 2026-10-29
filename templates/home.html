@@ -1,14 +1,23 @@
 {% extends 'base.html' %}
-{% block title %}Greeting{% endblock %}
+{% block title %}Hello, Flask{% endblock %}
 {% block content %}
-<section class="surface p-4 p-md-5">
-  {% if user %}
-  <h1 class="greeting user">Hello {{ user }}!</h1>
-  {% else %}
-  <h1 class="greeting">Hello world!</h1>
-  {% endif %}
-  <p class="text-secondary mt-3">A greeting rendered with a Jinja template and an optional URL parameter.</p>
-  <p>Try <a href="{{ url_for('hello', user_name='Corpuz') }}">a personalized greeting</a>, or change the name in the URL.</p>
-  <a class="btn btn-primary mt-2" href="{{ url_for('index') }}">View items</a>
+<section class="greeting-layout">
+  <div>
+    <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> A SMALL INTRODUCTION</p>
+    {% if user %}
+    <h1 class="greeting user">Hello {{ user }}!</h1>
+    {% else %}
+    <h1 class="greeting">Hello world!</h1>
+    {% endif %}
+    <p class="hero-description">A simple hello. A real web application.<br>This page brings Flask routing and Jinja templates together.</p>
+    <a class="btn btn-primary" href="{{ url_for('index') }}">Explore the workspace <span aria-hidden="true">↗</span></a>
+  </div>
+  <aside class="surface greeting-card">
+    <span class="eyebrow">HOW IT WORKS</span>
+    <h2 class="h4 mt-3">Make the greeting yours.</h2>
+    <p class="text-secondary">Add your name after <code>/hello/</code> in the address bar. Flask passes it to this template, and Jinja safely displays it here.</p>
+    <a class="route-example" href="{{ url_for('hello', user_name='Ezekiel') }}">/hello/<strong>Ezekiel</strong> <span aria-hidden="true">↗</span></a>
+    <p class="small text-secondary mb-0 mt-3">Built with Python, Flask, and a little curiosity.</p>
+  </aside>
 </section>
 {% endblock %}
