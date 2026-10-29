@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}Items{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+  <div>
+    <h1 class="mb-2">Items</h1>
+    <p class="text-secondary mb-0">A simple place to create, edit, and manage your items.</p>
+  </div>
+  <a class="btn btn-primary" href="{{ url_for('create') }}">Add new item</a>
+</div>
+<section class="surface" aria-label="Item list">
+  {% if items %}
+  <div class="table-responsive">
+    <table class="table align-middle mb-0">
+      <caption class="px-4">{{ items|length }} item{% if items|length != 1 %}s{% endif %}</caption>
+      <thead><tr><th scope="col">ID</th><th scope="col">Name</th><th scope="col" class="text-end">Actions</th></tr></thead>
+      <tbody>
+      {% for item in items %}
+        <tr>
+          <td class="text-secondary">{{ item.idNum }}</td>
+          <th scope="row" class="item-name fw-normal">{{ item.name }}</th>
+          <td>
+            <div class="d-flex justify-content-end flex-wrap gap-2">
+              <a class="btn btn-outline-primary btn-sm" href="{{ url_for('update', idNum=item.idNum) }}" aria-label="Edit {{ item.name }}">Edit</a>
+              <form method="post" action="{{ url_for('delete', idNum=item.idNum) }}" data-confirm-delete>
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button class="btn btn-outline-danger btn-sm" type="submit" aria-label="Delete {{ item.name }}">Delete</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="text-center p-5">
+    <h2 class="h4">No items yet</h2>
+    <p class="text-secondary">Create your first item to get started.</p>
+    <a class="btn btn-outline-primary" href="{{ url_for('create') }}">Create an item</a>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

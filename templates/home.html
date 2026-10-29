@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Greeting{% endblock %}
+{% block content %}
+<section class="surface p-4 p-md-5">
+  {% if user %}
+  <h1 class="greeting user">Hello {{ user }}!</h1>
+  {% else %}
+  <h1 class="greeting">Hello world!</h1>
+  {% endif %}
+  <p class="text-secondary mt-3">A greeting rendered with a Jinja template and an optional URL parameter.</p>
+  <p>Try <a href="{{ url_for('hello', user_name='Corpuz') }}">a personalized greeting</a>, or change the name in the URL.</p>
+  <a class="btn btn-primary mt-2" href="{{ url_for('index') }}">View items</a>
+</section>
+{% endblock %}

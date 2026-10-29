@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Flask Site{% endblock %} · Corpuz</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/test.css') }}">
+</head>
+<body>
+  <a class="visually-hidden-focusable skip-link" href="#main">Skip to content</a>
+  <header class="border-bottom bg-white">
+    <nav class="container app-width d-flex flex-wrap align-items-center justify-content-between gap-3 py-3" aria-label="Main navigation">
+      <a class="brand text-decoration-none" href="{{ url_for('index') }}">Corpuz <span>Flask Site</span></a>
+      <div class="d-flex gap-4">
+        <a href="{{ url_for('index') }}"{% if request.endpoint == 'index' %} aria-current="page"{% endif %}>Items</a>
+        <a href="{{ url_for('hello') }}"{% if request.endpoint == 'hello' %} aria-current="page"{% endif %}>Greeting</a>
+      </div>
+    </nav>
+  </header>
+  <main id="main" class="container app-width py-5">
+    <p class="eyebrow mb-2">Python web frameworks · Flask</p>
+    {% block content %}<h1>Hello world!</h1>{% endblock %}
+  </main>
+  <footer class="container app-width text-secondary small pb-4">
+    Lecture 05 &amp; 06 · Templates, routing, and SQLite CRUD
+  </footer>
+  <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/site.js') }}"></script>
+</body>
+</html>

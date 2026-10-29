@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Update item{% endblock %}
+{% block content %}
+<a class="back-link" href="{{ url_for('index') }}">&larr; Back to items</a>
+<section class="surface form-surface p-4 p-md-5 mt-3">
+  <h1 class="h2">Update Item</h1>
+  <p class="text-secondary">Editing item #{{ item.idNum }}.</p>
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label class="form-label" for="name">Item name</label>
+    <input class="form-control{% if error %} is-invalid{% endif %}" id="name" name="name" type="text" value="{{ name }}" required maxlength="100" aria-describedby="name-help{% if error %} name-error{% endif %}"{% if error %} aria-invalid="true"{% endif %}>
+    <div id="name-help" class="form-text">Between 1 and 100 characters.</div>
+    {% if error %}<p id="name-error" class="text-danger mt-2" role="alert">{{ error }}</p>{% endif %}
+    <div class="d-flex gap-2 mt-4">
+      <button class="btn btn-primary" type="submit">Update</button>
+      <a class="btn btn-outline-secondary" href="{{ url_for('index') }}">Cancel</a>
+    </div>
+  </form>
+</section>
+{% endblock %}
