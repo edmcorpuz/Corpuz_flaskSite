@@ -13,8 +13,9 @@ Record the current Web-tab virtualenv, source directory, working directory, and
 static mappings so they can be restored if needed.
 
 Check the **Python version shown on the Web tab**. Use that same version below.
-The local project uses Python 3.12; PythonAnywhere supplies its own interpreters.
-Do not install a new interpreter on PythonAnywhere.
+This account's Web app uses **Python 3.13**; the commands below match it.
+The local project uses Python 3.12, and the test suite passes on both versions.
+PythonAnywhere supplies its own interpreters; do not install a new one there.
 
 ## PythonAnywhere Bash console
 
@@ -24,10 +25,10 @@ For the first clone:
 cd ~
 git clone https://github.com/edmcorpuz/Corpuz_flaskSite.git flask_site
 cd ~/flask_site
-PYTHON_VERSION=3.12 bash deploy/pythonanywhere_setup.sh
+PYTHON_VERSION=3.13 bash deploy/pythonanywhere_setup.sh
 ```
 
-If the Web tab says another supported version, replace `3.12` with that version.
+If the Web tab says another supported version, replace `3.13` with that version.
 If `~/flask_site` already contains this repository, do not clone over it:
 
 ```bash
@@ -35,7 +36,7 @@ cd ~/flask_site
 git status --short
 # Stop and preserve any local changes before continuing.
 git pull --ff-only origin main
-PYTHON_VERSION=3.12 bash deploy/pythonanywhere_setup.sh
+PYTHON_VERSION=3.13 bash deploy/pythonanywhere_setup.sh
 ```
 
 The script uses `mkvirtualenv` / `workon flaskENV`, installs requirements, runs

@@ -7,7 +7,7 @@ PROJECT_DIR="$HOME/flask_site"
 ACCOUNT="${HOME##*/}"
 DOMAIN="${PA_DOMAIN:-${ACCOUNT,,}.pythonanywhere.com}"
 WSGI_FILE="/var/www/${DOMAIN//./_}_wsgi.py"
-PYTHON_VERSION="${PYTHON_VERSION:-3.12}"
+PYTHON_VERSION="${PYTHON_VERSION:-3.13}"
 PYTHON="$(command -v "python${PYTHON_VERSION}" || true)"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
